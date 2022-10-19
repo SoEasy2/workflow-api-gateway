@@ -5,8 +5,21 @@ import { GraphQLModule } from '@nestjs/graphql';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { Context } from 'apollo-server-core';
 import { AppResolver } from './app.resolver';
+import { UsersModule } from './users/users.module';
+import { LoggerModule } from 'nestjs-pino';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 @Module({
   imports: [
+    ConfigModule.forRoot(),
+    LoggerModule.forRootAsync({
+      imports: [ConfigModule],
+      useFactory: async (configService: ConfigService) => ({
+        pinoHttp: {
+          safe: true,
+        },
+      }),
+      inject: [ConfigService],
+    }),
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
       playground: true,
@@ -34,6 +47,7 @@ import { AppResolver } from './app.resolver';
         credentials: true,
       },
     }),
+    UsersModule,
   ],
   controllers: [AppController],
   providers: [AppService, AppResolver],
