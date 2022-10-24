@@ -1,18 +1,24 @@
 import { Args, Mutation, Resolver } from '@nestjs/graphql';
 import { User } from './type/user';
 import { CreateUserInput } from './dto/create-user.input';
-import { UsersService } from './users.service';
 import { Inject, OnModuleInit } from '@nestjs/common';
 import { Client, ClientKafka, Transport } from '@nestjs/microservices';
+import { TOPIC_USER_CREATE } from './constants';
+import { UsersService } from './users.service';
 
 @Resolver()
-export class UsersResolver {
-  constructor(private readonly usersService: UsersService) {}
+export class UsersResolver implements OnModuleInit{
+  constructor(
+      @Inject('USERS_SERVICE') private readonly billingClient: ClientKafka,
+      private readonly usersService: UsersService,
+  ) {}
+  async onModuleInit() {
+    this.billingClient.subscribeToResponseOf('user.create');
+    await this.billingClient.connect();
+  }
 
   @Mutation(() => User || null)
   async createUser(@Args('createUserInput') createUserInput: CreateUserInput) {
-    const a = await this.usersService.addPost();
-    console.log('A', a);
-    return null;
+    return this.billingClient.send('user.create', { ...createUserInput });
   }
 }

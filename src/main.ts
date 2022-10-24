@@ -11,8 +11,7 @@ import { Logger } from 'nestjs-pino';
 async function bootstrap() {
   const app: NestExpressApplication =
     await NestFactory.create<NestExpressApplication>(
-      AppModule,
-      new ExpressAdapter(),
+      AppModule
     );
 
   app.enableCors({

@@ -1,32 +1,22 @@
 import { Inject, Injectable, OnModuleInit } from '@nestjs/common';
 import { Client, ClientKafka, Transport } from '@nestjs/microservices';
+import { TOPIC_USER_CREATE } from './constants';
+import { User } from './type/user';
+import { CreateUserInput } from './dto/create-user.input';
 
 @Injectable()
-export class UsersService implements OnModuleInit {
-  constructor() {}
-  @Client({
-    transport: Transport.KAFKA,
-    options: {
-      client: {
-        //clientId: 'posts',
-        brokers: ['kafka:9092'],
-      },
-      consumer: {
-        groupId: 'posts-consumer',
-      },
-    },
-  })
-  client: ClientKafka;
+export class UsersService implements OnModuleInit{
+  constructor(
+      @Inject('USERS_SERVICE') private readonly billingClient: ClientKafka,
+  ) {}
   async onModuleInit() {
-    this.client.subscribeToResponseOf('add.new.post');
-    this.client.subscribeToResponseOf('get.posts.list');
-    await this.client.connect();
+    this.billingClient.subscribeToResponseOf('user.create');
+    await this.billingClient.connect();
   }
-  async addPost() {
-    const a = await this.client
-      .send('add.new.post', 'hello')
-      .subscribe((data) => console.log('DATA', data));
-    console.log("A", a)
-    return a;
+
+  async createUser(createUserInput: CreateUserInput): Promise<User> {
+    const test =  await this.billingClient.send('user.create', { ...createUserInput }).toPromise();
+    console.log('TEST', test)
+    return test;
   }
 }
