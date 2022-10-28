@@ -6,23 +6,17 @@ import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { Context } from 'apollo-server-core';
 import { AppResolver } from './app.resolver';
 import { UsersModule } from './users/users.module';
-import { LoggerModule } from 'nestjs-pino';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { APP_FILTER, APP_INTERCEPTOR } from '@nestjs/core';
+import { HttpErrorFilter } from './shared/http-error.filter';
+import { LoggingInterceptor } from './shared/logging.interceptor';
+import { LoggerModule } from './shared/logger/logger.module';
 @Module({
   imports: [
     ConfigModule.forRoot(),
-    LoggerModule.forRootAsync({
-      imports: [ConfigModule],
-      useFactory: async (configService: ConfigService) => ({
-        pinoHttp: {
-          safe: true,
-        },
-      }),
-      inject: [ConfigService],
-    }),
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
-      playground: true,
+      playground: process.env.NODE_ENV !== 'production',
       introspection: true,
       autoSchemaFile: true,
       installSubscriptionHandlers: true,
@@ -48,8 +42,20 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
       },
     }),
     UsersModule,
+    LoggerModule,
   ],
   controllers: [AppController],
-  providers: [AppService, AppResolver],
+  providers: [
+    AppService,
+    AppResolver,
+    {
+      provide: APP_FILTER,
+      useClass: HttpErrorFilter,
+    },
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: LoggingInterceptor,
+    },
+  ],
 })
 export class AppModule {}
