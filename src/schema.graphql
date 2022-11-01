@@ -1,0 +1,70 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+input CreateUserInput {
+  """Example field (test@gmail.com)"""
+  email: String!
+
+  """Example field (test)"""
+  password: String
+
+  """Example field (+33333333)"""
+  phone: String!
+}
+
+type Mutation {
+  createUser(createUserInput: CreateUserInput!): User!
+  registerUser(registerUserInput: RegisterUserInput!): User!
+  removeUser(id: String!): String!
+  updateUser(updateUserInput: UpdateUserInput!): User!
+}
+
+type Query {
+  hello: String!
+}
+
+input RegisterUserInput {
+  """Example field (test@gmail.com)"""
+  email: String!
+
+  """Example field (test)"""
+  password: String
+
+  """Example field (+33333333)"""
+  phone: String!
+}
+
+input UpdateUserInput {
+  """Example field (test@gmail.com)"""
+  email: String!
+
+  """Example field (test@gmail.com)"""
+  id: String!
+
+  """Example field (test)"""
+  password: String
+
+  """Example field (+33333333)"""
+  phone: String!
+}
+
+type User {
+  """ISO date string"""
+  createdAt: String
+
+  """Example field (email)"""
+  email: String!
+
+  """Example field (uuid)"""
+  id: String!
+
+  """Example field (password)"""
+  password: String
+
+  """Example field (phone)"""
+  phone: String!
+
+  """ISO date string"""
+  updatedAt: String
+}

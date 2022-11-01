@@ -11,6 +11,7 @@ import { APP_FILTER, APP_INTERCEPTOR } from '@nestjs/core';
 import { HttpErrorFilter } from './shared/http-error.filter';
 import { LoggingInterceptor } from './shared/logging.interceptor';
 import { LoggerModule } from './shared/logger/logger.module';
+import { AuthModule } from './auth/auth.module';
 @Module({
   imports: [
     ConfigModule.forRoot(),
@@ -18,7 +19,11 @@ import { LoggerModule } from './shared/logger/logger.module';
       driver: ApolloDriver,
       playground: process.env.NODE_ENV !== 'production',
       introspection: true,
-      autoSchemaFile: true,
+      autoSchemaFile: './src/schema.graphql',
+      sortSchema: true,
+      buildSchemaOptions: {
+        numberScalarMode: 'integer',
+      },
       installSubscriptionHandlers: true,
       subscriptions: {
         'graphql-ws': {
@@ -43,6 +48,7 @@ import { LoggerModule } from './shared/logger/logger.module';
     }),
     UsersModule,
     LoggerModule,
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [
