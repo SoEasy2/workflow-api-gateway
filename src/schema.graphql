@@ -15,7 +15,7 @@ input CreateUserInput {
 
 type Mutation {
   createUser(createUserInput: CreateUserInput!): User!
-  registerUser(registerUserInput: RegisterUserInput!): User!
+  registerUser(registerUserInput: RegisterUserInput!): ResponseAuth!
   removeUser(id: String!): String!
   updateUser(updateUserInput: UpdateUserInput!): User!
 }
@@ -33,6 +33,22 @@ input RegisterUserInput {
 
   """Example field (+33333333)"""
   phone: String!
+}
+
+type ResponseAuth {
+  """Example field (tokens)"""
+  tokens: Token!
+
+  """Example field (user)"""
+  user: User!
+}
+
+type Token {
+  """Example field (refreshToken)"""
+  accessToken: String!
+
+  """Example field (accessToken)"""
+  refreshToken: String!
 }
 
 input UpdateUserInput {

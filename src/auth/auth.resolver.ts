@@ -5,6 +5,7 @@ import { HttpException, HttpStatus } from '@nestjs/common';
 import { AppLogger } from '../shared/logger/logger.service';
 import { AuthService } from './auth.service';
 import { RegisterUserInput } from './dto/register-user.input';
+import { ResponseAuth } from './types/response-auth';
 
 @Resolver('auth')
 export class AuthResolver {
@@ -14,7 +15,7 @@ export class AuthResolver {
   ) {
     this.appLogger.setContext(AuthResolver.name);
   }
-  @Mutation(() => User)
+  @Mutation(() => ResponseAuth)
   async registerUser(
     @Args('registerUserInput') registerUserInput: RegisterUserInput,
   ) {
