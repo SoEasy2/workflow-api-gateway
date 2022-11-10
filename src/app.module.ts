@@ -12,6 +12,8 @@ import { HttpErrorFilter } from './shared/http-error.filter';
 import { LoggingInterceptor } from './shared/logging.interceptor';
 import { LoggerModule } from './shared/logger/logger.module';
 import { AuthModule } from './auth/auth.module';
+import { APP_GUARD } from '@nestjs/core/constants';
+import { AuthGuard } from './guards/auth.guard';
 @Module({
   imports: [
     ConfigModule.forRoot(),
@@ -62,6 +64,10 @@ import { AuthModule } from './auth/auth.module';
       provide: APP_INTERCEPTOR,
       useClass: LoggingInterceptor,
     },
+    {
+      provide: APP_GUARD,
+      useClass: AuthGuard,
+    }
   ],
 })
 export class AppModule {}
