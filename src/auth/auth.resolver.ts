@@ -1,6 +1,4 @@
 import { Args, Mutation, Resolver } from '@nestjs/graphql';
-import { User } from '../users/type/user';
-import { CreateUserInput } from '../users/dto/create-user.input';
 import { HttpException, HttpStatus, UseGuards } from '@nestjs/common';
 import { AppLogger } from '../shared/logger/logger.service';
 import { AuthService } from './auth.service';
@@ -25,7 +23,7 @@ export class AuthResolver {
       this.appLogger.log('[AuthService] -> [registerUser]');
       return await this.authService.registerUser(registerUserInput);
     } catch (err) {
-      console.log("ERROR", err);
+      console.log('ERROR', err);
       throw new HttpException(err, HttpStatus.BAD_REQUEST);
     }
   }

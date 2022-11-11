@@ -13,7 +13,7 @@ import { v4 as uuidv4 } from 'uuid';
         transport: Transport.KAFKA,
         options: {
           client: {
-           // clientId: 'users-gateway',
+            // clientId: 'users-gateway',
             brokers: ['kafka:9092'],
           },
           consumer: {

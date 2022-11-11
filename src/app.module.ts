@@ -14,8 +14,26 @@ import { LoggerModule } from './shared/logger/logger.module';
 import { AuthModule } from './auth/auth.module';
 import { APP_GUARD } from '@nestjs/core/constants';
 import { AuthGuard } from './guards/auth.guard';
+import { ClientsModule, Transport } from '@nestjs/microservices';
+import { v4 as uuidv4 } from 'uuid';
+
 @Module({
   imports: [
+    ClientsModule.register([
+      {
+        name: 'AUTH_SERVICE',
+        transport: Transport.KAFKA,
+        options: {
+          client: {
+            clientId: 'auth',
+            brokers: ['kafka:9092'],
+          },
+          consumer: {
+            groupId: `auth-consumer-${uuidv4()}`,
+          },
+        },
+      },
+    ]),
     ConfigModule.forRoot(),
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
@@ -67,7 +85,7 @@ import { AuthGuard } from './guards/auth.guard';
     {
       provide: APP_GUARD,
       useClass: AuthGuard,
-    }
+    },
   ],
 })
 export class AppModule {}

@@ -4,8 +4,8 @@ import { Token } from './token';
 
 @ObjectType()
 export class ResponseAuth {
-    @Field(() => User, { description: 'Example field (user)' })
-    user: User;
-    @Field(() => Token, { description: 'Example field (tokens)' })
-    tokens: Token;
+  @Field(() => User, { description: 'Example field (user)' })
+  user: User;
+  @Field(() => Token, { description: 'Example field (tokens)' })
+  tokens: Token;
 }
