@@ -5,6 +5,7 @@ import { AuthService } from './auth.service';
 import { RegisterUserInput } from './dto/register-user.input';
 import { ResponseAuth } from './types/response-auth';
 import { AuthGuard } from '../guards/auth.guard';
+import { CurrentUserDecoratorGraphql } from '../decorators/current-user.decorator.graphql';
 
 @Resolver('auth')
 export class AuthResolver {
@@ -18,9 +19,11 @@ export class AuthResolver {
   @Mutation(() => ResponseAuth)
   async registerUser(
     @Args('registerUserInput') registerUserInput: RegisterUserInput,
+    @CurrentUserDecoratorGraphql() user,
   ) {
     try {
       this.appLogger.log('[AuthService] -> [registerUser]');
+      console.log("USER", user)
       return await this.authService.registerUser(registerUserInput);
     } catch (err) {
       console.log('ERROR', err);
