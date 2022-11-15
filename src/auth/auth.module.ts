@@ -4,6 +4,7 @@ import { AuthResolver } from './auth.resolver';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { AppLogger } from '../shared/logger/logger.service';
 import { v4 as uuidv4 } from 'uuid';
+import { AuthGuard } from '../guards/auth.guard';
 @Module({
   imports: [
     ClientsModule.register([
@@ -22,6 +23,6 @@ import { v4 as uuidv4 } from 'uuid';
       },
     ]),
   ],
-  providers: [AuthService, AuthResolver, AppLogger],
+  providers: [AuthService, AuthResolver, AppLogger, AuthGuard],
 })
 export class AuthModule {}

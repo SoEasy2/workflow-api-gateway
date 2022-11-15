@@ -6,6 +6,7 @@ import { RegisterUserInput } from './dto/register-user.input';
 import { ResponseAuth } from './types/response-auth';
 import { AuthGuard } from '../guards/auth.guard';
 import { CurrentUserDecoratorGraphql } from '../decorators/current-user.decorator.graphql';
+import { User } from '../users/type/user';
 
 @Resolver('auth')
 export class AuthResolver {
@@ -15,18 +16,30 @@ export class AuthResolver {
   ) {
     this.appLogger.setContext(AuthResolver.name);
   }
-  @UseGuards(AuthGuard)
+
   @Mutation(() => ResponseAuth)
   async registerUser(
     @Args('registerUserInput') registerUserInput: RegisterUserInput,
-    @CurrentUserDecoratorGraphql() user,
   ) {
     try {
       this.appLogger.log('[AuthService] -> [registerUser]');
-      console.log("USER", user)
       return await this.authService.registerUser(registerUserInput);
     } catch (err) {
-      console.log('ERROR', err);
+      throw new HttpException(err, HttpStatus.BAD_REQUEST);
+    }
+  }
+
+  @Mutation(() => User)
+  @UseGuards(AuthGuard)
+  async verificationUser(
+    @Args('emailCode', { type: () => String }) emailCode: string,
+    @CurrentUserDecoratorGraphql() user,
+  ): Promise<User> {
+    try {
+      this.appLogger.log('[AuthService] -> [verificationUser]');
+      const { email } = user;
+      return await this.authService.verificationUser({ email, emailCode });
+    } catch (err) {
       throw new HttpException(err, HttpStatus.BAD_REQUEST);
     }
   }

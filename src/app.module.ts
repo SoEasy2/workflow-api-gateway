@@ -12,8 +12,6 @@ import { HttpErrorFilter } from './shared/http-error.filter';
 import { LoggingInterceptor } from './shared/logging.interceptor';
 import { LoggerModule } from './shared/logger/logger.module';
 import { AuthModule } from './auth/auth.module';
-import { APP_GUARD } from '@nestjs/core/constants';
-import { AuthGuard } from './guards/auth.guard';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -81,10 +79,6 @@ import { v4 as uuidv4 } from 'uuid';
     {
       provide: APP_INTERCEPTOR,
       useClass: LoggingInterceptor,
-    },
-    {
-      provide: APP_GUARD,
-      useClass: AuthGuard,
     },
   ],
 })

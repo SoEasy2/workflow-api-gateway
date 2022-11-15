@@ -9,7 +9,7 @@ import {
 } from '@nestjs/common';
 import { GqlExecutionContext } from '@nestjs/graphql';
 import { ClientKafka } from '@nestjs/microservices';
-import { TOPIC_AUTH_VERIFY_TOKEN } from '../users/constants'
+import { TOPIC_AUTH_VERIFY_TOKEN } from '../users/constants';
 import * as jwt from 'jsonwebtoken';
 
 @Injectable()
@@ -34,7 +34,7 @@ export class AuthGuard implements CanActivate, OnModuleInit {
     const gqlReq = ctx.getContext().req;
     const { headers } = gqlReq;
     const { authorization } = headers;
-   // return true;
+    // return true;
     if (!authorization) {
       this.appLogger.error(
         '[AuthGuard] -> [canActivate] -> [authorization]',

@@ -18,6 +18,7 @@ type Mutation {
   registerUser(registerUserInput: RegisterUserInput!): ResponseAuth!
   removeUser(id: String!): String!
   updateUser(updateUserInput: UpdateUserInput!): User!
+  verificationUser(emailCode: String!): User!
 }
 
 type Query {
@@ -66,6 +67,9 @@ input UpdateUserInput {
 }
 
 type User {
+  """Example field (code email)"""
+  codeEmail: String!
+
   """ISO date string"""
   createdAt: String
 
@@ -81,6 +85,15 @@ type User {
   """Example field (phone)"""
   phone: String!
 
-  """ISO date string"""
+  """Example field (salt)"""
+  salt: String!
+
+  """Example field (send code date)"""
+  sendCodeDate: String!
+
+  """Example field (current step)"""
+  stepRegistration: String!
+
+  """ISO date"""
   updatedAt: String
 }
