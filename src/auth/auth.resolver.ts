@@ -1,5 +1,5 @@
 import { Args, Mutation, Resolver } from '@nestjs/graphql';
-import { HttpException, HttpStatus, UseGuards } from '@nestjs/common';
+import { HttpException, HttpStatus, Req, UseGuards } from '@nestjs/common';
 import { AppLogger } from '../shared/logger/logger.service';
 import { AuthService } from './auth.service';
 import { RegisterUserInput } from './dto/register-user.input';
@@ -7,6 +7,7 @@ import { ResponseAuth } from './types/response-auth';
 import { AuthGuard } from '../guards/auth.guard';
 import { CurrentUserDecoratorGraphql } from '../decorators/current-user.decorator.graphql';
 import { User } from '../users/type/user';
+import { Request } from 'express';
 
 @Resolver('auth')
 export class AuthResolver {
@@ -39,6 +40,19 @@ export class AuthResolver {
       this.appLogger.log('[AuthService] -> [verificationUser]');
       const { email } = user;
       return await this.authService.verificationUser({ email, emailCode });
+    } catch (err) {
+      throw new HttpException(err, HttpStatus.BAD_REQUEST);
+    }
+  }
+
+  @Mutation(() => ResponseAuth)
+  async refresh(
+      @Req() req: Request,
+  ){
+      try {
+      this.appLogger.log('[AuthService] -> [refresh]');
+      const { refresh_token } = req.cookies;
+      return await this.authService.refresh(refresh_token);
     } catch (err) {
       throw new HttpException(err, HttpStatus.BAD_REQUEST);
     }
