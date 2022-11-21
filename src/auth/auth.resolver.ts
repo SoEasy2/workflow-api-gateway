@@ -1,4 +1,4 @@
-import { Args, Mutation, Resolver } from '@nestjs/graphql';
+import { Args, Context, GraphQLExecutionContext, Mutation, Resolver } from '@nestjs/graphql';
 import { HttpException, HttpStatus, Req, UseGuards } from '@nestjs/common';
 import { AppLogger } from '../shared/logger/logger.service';
 import { AuthService } from './auth.service';
@@ -7,7 +7,8 @@ import { ResponseAuth } from './types/response-auth';
 import { AuthGuard } from '../guards/auth.guard';
 import { CurrentUserDecoratorGraphql } from '../decorators/current-user.decorator.graphql';
 import { User } from '../users/type/user';
-import { Request } from 'express';
+import { ContextGraphqlDecorator } from '../decorators/context-graphql.decorator';
+import { GetRefreshTokenDecoratorGraphql } from '../decorators/get-refresh-token.decorator.graphql';
 
 @Resolver('auth')
 export class AuthResolver {
@@ -19,6 +20,7 @@ export class AuthResolver {
   }
 
   @Mutation(() => ResponseAuth)
+  @UseGuards(AuthGuard)
   async registerUser(
     @Args('registerUserInput') registerUserInput: RegisterUserInput,
   ) {
@@ -47,12 +49,12 @@ export class AuthResolver {
 
   @Mutation(() => ResponseAuth)
   async refresh(
-      @Req() req: Request,
+      @ContextGraphqlDecorator() context,
+      @GetRefreshTokenDecoratorGraphql() refreshToken: string,
   ){
       try {
       this.appLogger.log('[AuthService] -> [refresh]');
-      const { refresh_token } = req.cookies;
-      return await this.authService.refresh(refresh_token);
+      return await this.authService.refresh(refreshToken);
     } catch (err) {
       throw new HttpException(err, HttpStatus.BAD_REQUEST);
     }

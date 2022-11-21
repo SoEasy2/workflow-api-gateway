@@ -35,7 +35,7 @@ import { v4 as uuidv4 } from 'uuid';
     ConfigModule.forRoot(),
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
-      playground: process.env.NODE_ENV !== 'production',
+      playground: process.env.NODE_ENV === 'production' ? false : { settings: { 'request.credentials': 'include' } },
       introspection: true,
       autoSchemaFile: './src/schema.graphql',
       sortSchema: true,

@@ -15,6 +15,7 @@ input CreateUserInput {
 
 type Mutation {
   createUser(createUserInput: CreateUserInput!): User!
+  refresh: ResponseAuth!
   registerUser(registerUserInput: RegisterUserInput!): ResponseAuth!
   removeUser(id: String!): String!
   updateUser(updateUserInput: UpdateUserInput!): User!

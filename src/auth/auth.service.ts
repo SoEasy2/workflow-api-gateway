@@ -25,6 +25,7 @@ export class AuthService implements OnModuleInit {
     const topics: Array<string> = [
       TOPIC_AUTH_REGISTER,
       TOPIC_AUTH_VERIFICATION,
+      TOPIC_AUTH_REFRESH
     ];
     topics.forEach((topic) => {
       this.clientAuth.subscribeToResponseOf(topic);
