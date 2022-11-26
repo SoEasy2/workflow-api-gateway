@@ -1,5 +1,6 @@
 import { Field, ObjectType } from '@nestjs/graphql';
 import { StepRegistration } from '../constants/stepRegistration';
+import { Company } from '../../company/type/company';
 
 @ObjectType()
 export class User {
@@ -20,6 +21,9 @@ export class User {
 
   @Field(() => String, { description: 'Example field (current step)' })
   stepRegistration: StepRegistration;
+
+  @Field(() => Company, { nullable: true })
+  currentCompany?: Company;
 
   @Field(() => String, {
     description: 'Example field (password)',

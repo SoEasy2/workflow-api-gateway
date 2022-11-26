@@ -14,6 +14,7 @@ import { LoggerModule } from './shared/logger/logger.module';
 import { AuthModule } from './auth/auth.module';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { v4 as uuidv4 } from 'uuid';
+import { CompanyModule } from './company/company.module';
 
 @Module({
   imports: [
@@ -67,6 +68,7 @@ import { v4 as uuidv4 } from 'uuid';
     UsersModule,
     LoggerModule,
     AuthModule,
+    CompanyModule,
   ],
   controllers: [AppController],
   providers: [
