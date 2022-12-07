@@ -20,7 +20,6 @@ export class AuthResolver {
   }
 
   @Mutation(() => ResponseAuth)
-  @UseGuards(AuthGuard)
   async registerUser(
     @Args('registerUserInput') registerUserInput: RegisterUserInput,
   ) {
@@ -53,8 +52,23 @@ export class AuthResolver {
       @GetRefreshTokenDecoratorGraphql() refreshToken: string,
   ){
       try {
+        console.log('refreshToken', refreshToken)
       this.appLogger.log('[AuthService] -> [refresh]');
       return await this.authService.refresh(refreshToken);
+    } catch (err) {
+      throw new HttpException(err, HttpStatus.BAD_REQUEST);
+    }
+  }
+
+  @Mutation(() => User)
+  @UseGuards(AuthGuard)
+  async resendVerificationCode(
+      @CurrentUserDecoratorGraphql() user
+  ) {
+    try {
+      this.appLogger.log('[AuthService] -> [resendVerificationCode]');
+      const { email } = user;
+      return await this.authService.resendVerificationCode(email)
     } catch (err) {
       throw new HttpException(err, HttpStatus.BAD_REQUEST);
     }

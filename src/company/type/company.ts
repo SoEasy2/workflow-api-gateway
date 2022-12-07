@@ -11,7 +11,7 @@ export class Company {
   user: string;
   @Field(() => [String], { description: 'Example field (uuid array)' })
   targetUser: Array<string>;
-  @Field(() => EmployeesCount, {
+  @Field(() => Number, {
     description: 'Example field (employees count)',
   })
   amountOfEmployees: EmployeesCount;

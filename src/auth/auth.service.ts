@@ -10,6 +10,7 @@ import {
   TOPIC_AUTH_REFRESH,
   TOPIC_AUTH_REGISTER,
   TOPIC_AUTH_VERIFICATION,
+  TOPIC_AUTH_VERIFICATION_RESEND,
 } from '../users/constants';
 import { RegisterUserInput } from './dto/register-user.input';
 import { User } from '../users/type/user';
@@ -25,7 +26,8 @@ export class AuthService implements OnModuleInit {
     const topics: Array<string> = [
       TOPIC_AUTH_REGISTER,
       TOPIC_AUTH_VERIFICATION,
-      TOPIC_AUTH_REFRESH
+      TOPIC_AUTH_REFRESH,
+      TOPIC_AUTH_VERIFICATION_RESEND,
     ];
     topics.forEach((topic) => {
       this.clientAuth.subscribeToResponseOf(topic);
@@ -58,6 +60,15 @@ export class AuthService implements OnModuleInit {
   refresh(refreshToken: string): Promise<ResponseAuth> {
     return new Promise<ResponseAuth>((resolve, reject) => {
       this.clientAuth.send(TOPIC_AUTH_REFRESH, refreshToken ).subscribe({
+        next: (response) => resolve(response),
+        error: (error) => reject(error),
+      });
+    })
+  }
+
+  resendVerificationCode(email: string): Promise<User> {
+    return new Promise<User>((resolve, reject) => {
+      this.clientAuth.send(TOPIC_AUTH_VERIFICATION_RESEND, email ).subscribe({
         next: (response) => resolve(response),
         error: (error) => reject(error),
       });
