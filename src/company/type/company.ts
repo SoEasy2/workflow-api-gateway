@@ -9,8 +9,10 @@ export class Company {
   name: string;
   @Field(() => String, { description: 'Example field (uuid)' })
   user: string;
+
   @Field(() => [String], { description: 'Example field (uuid array)' })
   targetUser: Array<string>;
+
   @Field(() => Number, {
     description: 'Example field (employees count)',
   })

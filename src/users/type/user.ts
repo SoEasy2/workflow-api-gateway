@@ -23,7 +23,7 @@ export class User {
   stepRegistration: StepRegistration;
 
   @Field(() => Company, { nullable: true })
-  currentCompany?: Company;
+  currentCompany?: Company | string;
 
   @Field(() => String, {
     description: 'Example field (password)',

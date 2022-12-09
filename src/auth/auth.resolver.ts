@@ -73,4 +73,17 @@ export class AuthResolver {
       throw new HttpException(err, HttpStatus.BAD_REQUEST);
     }
   }
+  @Mutation(() => User)
+  @UseGuards(AuthGuard)
+  async details(
+      @CurrentUserDecoratorGraphql() user
+  ) {
+    try {
+      this.appLogger.log('[AuthService] -> [details]');
+      const { email, id } = user;
+
+    } catch (err) {
+      throw new HttpException(err, HttpStatus.BAD_REQUEST);
+    }
+  }
 }
