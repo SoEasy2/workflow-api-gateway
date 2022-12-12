@@ -41,8 +41,29 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 """
 scalar DateTime
 
+input DetailsCompany {
+  amountOfEmployees: String!
+  name: String!
+}
+
+input DetailsInput {
+  """Example field (+33333333)"""
+  company: DetailsCompany!
+
+  """Example field (test@gmail.com)"""
+  user: DetailsUser!
+}
+
+input DetailsUser {
+  email: String
+  id: String
+  name: String!
+  password: String!
+}
+
 type Mutation {
   createUser(createUserInput: CreateUserInput!): User!
+  details(detailsInput: DetailsInput!): User!
   refresh: ResponseAuth!
   registerUser(registerUserInput: RegisterUserInput!): ResponseAuth!
   removeUser(id: String!): String!

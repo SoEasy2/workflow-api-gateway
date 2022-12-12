@@ -5,10 +5,11 @@ import { AuthService } from './auth.service';
 import { RegisterUserInput } from './dto/register-user.input';
 import { ResponseAuth } from './types/response-auth';
 import { AuthGuard } from '../guards/auth.guard';
-import { CurrentUserDecoratorGraphql } from '../decorators/current-user.decorator.graphql';
 import { User } from '../users/type/user';
 import { ContextGraphqlDecorator } from '../decorators/context-graphql.decorator';
 import { GetRefreshTokenDecoratorGraphql } from '../decorators/get-refresh-token.decorator.graphql';
+import { DetailsInput } from './dto/details.input';
+import { CurrentUserDecoratorGraphql } from '../decorators/current-user.decorator.graphql';
 
 @Resolver('auth')
 export class AuthResolver {
@@ -35,7 +36,7 @@ export class AuthResolver {
   @UseGuards(AuthGuard)
   async verificationUser(
     @Args('emailCode', { type: () => String }) emailCode: string,
-    @CurrentUserDecoratorGraphql() user,
+    @CurrentUserDecoratorGraphql() user: any,
   ): Promise<User> {
     try {
       this.appLogger.log('[AuthService] -> [verificationUser]');
@@ -46,13 +47,33 @@ export class AuthResolver {
     }
   }
 
+  @Mutation(() => User)
+  @UseGuards(AuthGuard)
+  async details(
+      @Args('detailsInput') detailsInput: DetailsInput,
+      @CurrentUserDecoratorGraphql() user: any,
+  ) {
+    try {
+      this.appLogger.log('[AuthService] -> [details]');
+      const { email, id } = user;
+      const { user: userDto, company } = detailsInput;
+      const dto: DetailsInput = {
+        user: {
+          ...userDto, email, id
+        },
+        company,
+      }
+      return await this.authService.details(dto);
+    } catch (err) {
+      throw new HttpException(err, HttpStatus.BAD_REQUEST);
+    }
+  }
+
   @Mutation(() => ResponseAuth)
   async refresh(
-      @ContextGraphqlDecorator() context,
       @GetRefreshTokenDecoratorGraphql() refreshToken: string,
   ){
       try {
-        console.log('refreshToken', refreshToken)
       this.appLogger.log('[AuthService] -> [refresh]');
       return await this.authService.refresh(refreshToken);
     } catch (err) {
@@ -69,19 +90,6 @@ export class AuthResolver {
       this.appLogger.log('[AuthService] -> [resendVerificationCode]');
       const { email } = user;
       return await this.authService.resendVerificationCode(email)
-    } catch (err) {
-      throw new HttpException(err, HttpStatus.BAD_REQUEST);
-    }
-  }
-  @Mutation(() => User)
-  @UseGuards(AuthGuard)
-  async details(
-      @CurrentUserDecoratorGraphql() user
-  ) {
-    try {
-      this.appLogger.log('[AuthService] -> [details]');
-      const { email, id } = user;
-
     } catch (err) {
       throw new HttpException(err, HttpStatus.BAD_REQUEST);
     }
