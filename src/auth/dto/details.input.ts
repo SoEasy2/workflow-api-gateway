@@ -11,7 +11,7 @@ class DetailsUser extends PartialType(User) {
     @Field(() => String, { nullable: true })
     email?: string
     @Field(() => String)
-    name: string;
+    username: string;
     @Field(() => String)
     password: string;
 }

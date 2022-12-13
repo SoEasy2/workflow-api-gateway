@@ -39,7 +39,6 @@ export class AuthService implements OnModuleInit {
     await this.clientAuth.connect();
   }
   registerUser(registerUserInput: RegisterUserInput): Promise<User> {
-    try {
       return new Promise((resolve, reject) => {
         this.clientAuth
           .send(TOPIC_AUTH_REGISTER, { ...registerUserInput })
@@ -48,9 +47,6 @@ export class AuthService implements OnModuleInit {
             error: (error) => reject(error),
           });
       });
-    } catch (e) {
-      throw new HttpException(e, HttpStatus.INTERNAL_SERVER_ERROR);
-    }
   }
   verificationUser(dto: VerificationUserInput): Promise<User> {
     return new Promise<User>((resolve, reject) => {

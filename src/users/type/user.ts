@@ -40,6 +40,9 @@ export class User {
   })
   createdAt: Date;
 
+  @Field(() => String, { description: 'username', nullable: true })
+  username?: string
+
   @Field(() => String, {
     description: 'ISO date',
     nullable: true,
