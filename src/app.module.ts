@@ -36,7 +36,10 @@ import { CompanyModule } from './company/company.module';
     ConfigModule.forRoot(),
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
-      playground: process.env.NODE_ENV === 'production' ? false : { settings: { 'request.credentials': 'include' } },
+      playground:
+        process.env.NODE_ENV === 'production'
+          ? false
+          : { settings: { 'request.credentials': 'include' } },
       introspection: true,
       autoSchemaFile: './src/schema.graphql',
       sortSchema: true,

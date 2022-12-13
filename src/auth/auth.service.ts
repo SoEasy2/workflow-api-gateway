@@ -30,7 +30,7 @@ export class AuthService implements OnModuleInit {
       TOPIC_AUTH_VERIFICATION,
       TOPIC_AUTH_REFRESH,
       TOPIC_AUTH_VERIFICATION_RESEND,
-      TOPIC_AUTH_DETAILS
+      TOPIC_AUTH_DETAILS,
     ];
     topics.forEach((topic) => {
       this.clientAuth.subscribeToResponseOf(topic);
@@ -39,14 +39,14 @@ export class AuthService implements OnModuleInit {
     await this.clientAuth.connect();
   }
   registerUser(registerUserInput: RegisterUserInput): Promise<User> {
-      return new Promise((resolve, reject) => {
-        this.clientAuth
-          .send(TOPIC_AUTH_REGISTER, { ...registerUserInput })
-          .subscribe({
-            next: (response) => resolve(response),
-            error: (error) => reject(error),
-          });
-      });
+    return new Promise((resolve, reject) => {
+      this.clientAuth
+        .send(TOPIC_AUTH_REGISTER, { ...registerUserInput })
+        .subscribe({
+          next: (response) => resolve(response),
+          error: (error) => reject(error),
+        });
+    });
   }
   verificationUser(dto: VerificationUserInput): Promise<User> {
     return new Promise<User>((resolve, reject) => {
@@ -58,28 +58,28 @@ export class AuthService implements OnModuleInit {
   }
   refresh(refreshToken: string): Promise<ResponseAuth> {
     return new Promise<ResponseAuth>((resolve, reject) => {
-      this.clientAuth.send(TOPIC_AUTH_REFRESH, refreshToken ).subscribe({
+      this.clientAuth.send(TOPIC_AUTH_REFRESH, refreshToken).subscribe({
         next: (response) => resolve(response),
         error: (error) => reject(error),
       });
-    })
+    });
   }
 
   resendVerificationCode(email: string): Promise<User> {
     return new Promise<User>((resolve, reject) => {
-      this.clientAuth.send(TOPIC_AUTH_VERIFICATION_RESEND, email ).subscribe({
+      this.clientAuth.send(TOPIC_AUTH_VERIFICATION_RESEND, email).subscribe({
         next: (response) => resolve(response),
         error: (error) => reject(error),
       });
-    })
+    });
   }
 
   details(detailsInput: DetailsInput): Promise<User> {
     return new Promise<User>((resolve, reject) => {
-      this.clientAuth.send(TOPIC_AUTH_DETAILS, detailsInput ).subscribe({
+      this.clientAuth.send(TOPIC_AUTH_DETAILS, detailsInput).subscribe({
         next: (response) => resolve(response),
         error: (error) => reject(error),
       });
-    })
+    });
   }
 }

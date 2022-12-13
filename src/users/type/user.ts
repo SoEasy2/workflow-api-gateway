@@ -41,7 +41,7 @@ export class User {
   createdAt: Date;
 
   @Field(() => String, { description: 'username', nullable: true })
-  username?: string
+  username?: string;
 
   @Field(() => String, {
     description: 'ISO date',
