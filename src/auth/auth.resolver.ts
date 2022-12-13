@@ -1,18 +1,15 @@
 import {
   Args,
-  Context,
-  GraphQLExecutionContext,
   Mutation,
   Resolver,
 } from '@nestjs/graphql';
-import { HttpException, HttpStatus, Req, UseGuards } from '@nestjs/common';
+import { HttpException, HttpStatus, UseGuards } from '@nestjs/common';
 import { AppLogger } from '../shared/logger/logger.service';
 import { AuthService } from './auth.service';
 import { RegisterUserInput } from './dto/register-user.input';
 import { ResponseAuth } from './types/response-auth';
 import { AuthGuard } from '../guards/auth.guard';
 import { User } from '../users/type/user';
-import { ContextGraphqlDecorator } from '../decorators/context-graphql.decorator';
 import { GetRefreshTokenDecoratorGraphql } from '../decorators/get-refresh-token.decorator.graphql';
 import { DetailsInput } from './dto/details.input';
 import { CurrentUserDecoratorGraphql } from '../decorators/current-user.decorator.graphql';

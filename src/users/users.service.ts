@@ -5,7 +5,7 @@ import {
   Injectable,
   OnModuleInit,
 } from '@nestjs/common';
-import { ClientKafka, RpcException } from '@nestjs/microservices';
+import { ClientKafka } from '@nestjs/microservices';
 import {
   TOPIC_USER_CREATE,
   TOPIC_USER_REMOVE,
