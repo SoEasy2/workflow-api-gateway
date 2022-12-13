@@ -1,8 +1,4 @@
-import {
-  Args,
-  Mutation,
-  Resolver,
-} from '@nestjs/graphql';
+import { Args, Mutation, Resolver } from '@nestjs/graphql';
 import { HttpException, HttpStatus, UseGuards } from '@nestjs/common';
 import { AppLogger } from '../shared/logger/logger.service';
 import { AuthService } from './auth.service';

@@ -1,9 +1,4 @@
-import {
-  Field,
-  InputType,
-  ObjectType,
-  PartialType,
-} from '@nestjs/graphql';
+import { Field, InputType, ObjectType, PartialType } from '@nestjs/graphql';
 import { User } from '../../users/type/user';
 import { Company } from '../../company/type/company';
 import { EmployeesCount } from '../../company/constants/employesCount';
