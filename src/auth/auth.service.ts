@@ -1,7 +1,7 @@
 import { Inject, Injectable, OnModuleInit } from '@nestjs/common';
 import { ClientKafka } from '@nestjs/microservices';
 import {
-  TOPIC_AUTH_DETAILS,
+  TOPIC_AUTH_DETAILS, TOPIC_AUTH_LOGIN,
   TOPIC_AUTH_REFRESH,
   TOPIC_AUTH_REGISTER,
   TOPIC_AUTH_VERIFICATION,
@@ -12,6 +12,7 @@ import { User } from '../users/type/user';
 import { VerificationUserInput } from './dto/verification-user.input';
 import { ResponseAuth } from './types/response-auth';
 import { DetailsInput } from './dto/details.input';
+import { LoginUserInput } from './dto/login-user.input';
 
 @Injectable()
 export class AuthService implements OnModuleInit {
@@ -25,6 +26,7 @@ export class AuthService implements OnModuleInit {
       TOPIC_AUTH_REFRESH,
       TOPIC_AUTH_VERIFICATION_RESEND,
       TOPIC_AUTH_DETAILS,
+      TOPIC_AUTH_LOGIN,
     ];
     topics.forEach((topic) => {
       this.clientAuth.subscribeToResponseOf(topic);
@@ -75,5 +77,14 @@ export class AuthService implements OnModuleInit {
         error: (error) => reject(error),
       });
     });
+  }
+
+  login(loginUserInput: LoginUserInput): Promise<ResponseAuth> {
+    return new Promise<ResponseAuth>((resolve, reject) => {
+      this.clientAuth.send(TOPIC_AUTH_LOGIN, loginUserInput).subscribe({
+        next: (response) => resolve(response),
+        error: (error) => reject(error),
+      });
+    })
   }
 }

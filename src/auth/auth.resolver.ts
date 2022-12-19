@@ -9,6 +9,7 @@ import { User } from '../users/type/user';
 import { GetRefreshTokenDecoratorGraphql } from '../decorators/get-refresh-token.decorator.graphql';
 import { DetailsInput } from './dto/details.input';
 import { CurrentUserDecoratorGraphql } from '../decorators/current-user.decorator.graphql';
+import { LoginUserInput } from './dto/login-user.input';
 
 @Resolver('auth')
 export class AuthResolver {
@@ -22,7 +23,7 @@ export class AuthResolver {
   @Mutation(() => ResponseAuth)
   async registerUser(
     @Args('registerUserInput') registerUserInput: RegisterUserInput,
-  ) {
+  ): Promise<User> {
     try {
       this.appLogger.log('[AuthService] -> [registerUser]');
       return await this.authService.registerUser(registerUserInput);
@@ -35,7 +36,7 @@ export class AuthResolver {
   @UseGuards(AuthGuard)
   async verificationUser(
     @Args('emailCode', { type: () => String }) emailCode: string,
-    @CurrentUserDecoratorGraphql() user: any,
+    @CurrentUserDecoratorGraphql() user: Partial<User>,
   ): Promise<User> {
     try {
       this.appLogger.log('[AuthService] -> [verificationUser]');
@@ -50,8 +51,8 @@ export class AuthResolver {
   @UseGuards(AuthGuard)
   async details(
     @Args('detailsInput') detailsInput: DetailsInput,
-    @CurrentUserDecoratorGraphql() user: any,
-  ) {
+    @CurrentUserDecoratorGraphql() user: Partial<User>,
+  ): Promise<User> {
     try {
       this.appLogger.log('[AuthService] -> [details]');
       const { email, id } = user;
@@ -71,7 +72,7 @@ export class AuthResolver {
   }
 
   @Mutation(() => ResponseAuth)
-  async refresh(@GetRefreshTokenDecoratorGraphql() refreshToken: string) {
+  async refresh(@GetRefreshTokenDecoratorGraphql() refreshToken: string): Promise<ResponseAuth> {
     try {
       this.appLogger.log('[AuthService] -> [refresh]');
       return await this.authService.refresh(refreshToken);
@@ -82,11 +83,23 @@ export class AuthResolver {
 
   @Mutation(() => User)
   @UseGuards(AuthGuard)
-  async resendVerificationCode(@CurrentUserDecoratorGraphql() user) {
+  async resendVerificationCode(@CurrentUserDecoratorGraphql() user: Partial<User>): Promise<User> {
     try {
       this.appLogger.log('[AuthService] -> [resendVerificationCode]');
       const { email } = user;
       return await this.authService.resendVerificationCode(email);
+    } catch (err) {
+      throw new HttpException(err, HttpStatus.BAD_REQUEST);
+    }
+  }
+
+  @Mutation(() => ResponseAuth)
+  async login(
+      @Args('loginUserInput') loginUserInput: LoginUserInput,
+  ): Promise<ResponseAuth> {
+    try {
+      this.appLogger.log('[AuthService] -> [login]');
+      return await this.authService.login(loginUserInput)
     } catch (err) {
       throw new HttpException(err, HttpStatus.BAD_REQUEST);
     }
