@@ -1,7 +1,8 @@
 import { Inject, Injectable, OnModuleInit } from '@nestjs/common';
 import { ClientKafka } from '@nestjs/microservices';
 import {
-  TOPIC_AUTH_DETAILS, TOPIC_AUTH_LOGIN,
+  TOPIC_AUTH_DETAILS,
+  TOPIC_AUTH_LOGIN,
   TOPIC_AUTH_REFRESH,
   TOPIC_AUTH_REGISTER,
   TOPIC_AUTH_VERIFICATION,
@@ -85,6 +86,6 @@ export class AuthService implements OnModuleInit {
         next: (response) => resolve(response),
         error: (error) => reject(error),
       });
-    })
+    });
   }
 }

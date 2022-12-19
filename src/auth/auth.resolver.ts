@@ -72,7 +72,9 @@ export class AuthResolver {
   }
 
   @Mutation(() => ResponseAuth)
-  async refresh(@GetRefreshTokenDecoratorGraphql() refreshToken: string): Promise<ResponseAuth> {
+  async refresh(
+    @GetRefreshTokenDecoratorGraphql() refreshToken: string,
+  ): Promise<ResponseAuth> {
     try {
       this.appLogger.log('[AuthService] -> [refresh]');
       return await this.authService.refresh(refreshToken);
@@ -83,7 +85,9 @@ export class AuthResolver {
 
   @Mutation(() => User)
   @UseGuards(AuthGuard)
-  async resendVerificationCode(@CurrentUserDecoratorGraphql() user: Partial<User>): Promise<User> {
+  async resendVerificationCode(
+    @CurrentUserDecoratorGraphql() user: Partial<User>,
+  ): Promise<User> {
     try {
       this.appLogger.log('[AuthService] -> [resendVerificationCode]');
       const { email } = user;
@@ -95,11 +99,11 @@ export class AuthResolver {
 
   @Mutation(() => ResponseAuth)
   async login(
-      @Args('loginUserInput') loginUserInput: LoginUserInput,
+    @Args('loginUserInput') loginUserInput: LoginUserInput,
   ): Promise<ResponseAuth> {
     try {
       this.appLogger.log('[AuthService] -> [login]');
-      return await this.authService.login(loginUserInput)
+      return await this.authService.login(loginUserInput);
     } catch (err) {
       throw new HttpException(err, HttpStatus.BAD_REQUEST);
     }
