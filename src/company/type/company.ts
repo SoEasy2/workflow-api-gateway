@@ -13,6 +13,9 @@ export class Company {
   @Field(() => [String], { description: 'Example field (uuid array)' })
   targetUser: Array<string>;
 
+  @Field(() => String, { description: 'Code company for connect' })
+  code: string;
+
   @Field(() => Number, {
     description: 'Example field (employees count)',
   })

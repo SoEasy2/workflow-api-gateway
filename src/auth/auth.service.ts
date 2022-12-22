@@ -4,7 +4,7 @@ import {
   TOPIC_AUTH_DETAILS,
   TOPIC_AUTH_LOGIN,
   TOPIC_AUTH_REFRESH,
-  TOPIC_AUTH_REGISTER,
+  TOPIC_AUTH_REGISTER, TOPIC_AUTH_REGISTER_BY_CODE,
   TOPIC_AUTH_VERIFICATION,
   TOPIC_AUTH_VERIFICATION_RESEND,
 } from '../users/constants';
@@ -28,6 +28,7 @@ export class AuthService implements OnModuleInit {
       TOPIC_AUTH_VERIFICATION_RESEND,
       TOPIC_AUTH_DETAILS,
       TOPIC_AUTH_LOGIN,
+      TOPIC_AUTH_REGISTER_BY_CODE,
     ];
     topics.forEach((topic) => {
       this.clientAuth.subscribeToResponseOf(topic);
@@ -83,6 +84,15 @@ export class AuthService implements OnModuleInit {
   login(loginUserInput: LoginUserInput): Promise<ResponseAuth> {
     return new Promise<ResponseAuth>((resolve, reject) => {
       this.clientAuth.send(TOPIC_AUTH_LOGIN, loginUserInput).subscribe({
+        next: (response) => resolve(response),
+        error: (error) => reject(error),
+      });
+    });
+  }
+
+  registerByCodeCompany(code: string): Promise<string> {
+    return new Promise<string>((resolve, reject) => {
+      this.clientAuth.send(TOPIC_AUTH_REGISTER_BY_CODE, code).subscribe({
         next: (response) => resolve(response),
         error: (error) => reject(error),
       });

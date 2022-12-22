@@ -108,4 +108,16 @@ export class AuthResolver {
       throw new HttpException(err, HttpStatus.BAD_REQUEST);
     }
   }
+
+  @Mutation(() => String)
+  async registerByCodeCompany(
+      @Args('code') code: string,
+  ): Promise<string>{
+    try {
+      this.appLogger.log('[AuthService] -> [registerByCodeCompany]');
+      return await this.authService.registerByCodeCompany(code);
+    } catch (err) {
+      throw new HttpException(err, HttpStatus.BAD_REQUEST);
+    }
+  }
 }

@@ -10,3 +10,4 @@ export const TOPIC_AUTH_REFRESH = 'auth.refresh';
 export const TOPIC_AUTH_VERIFICATION_RESEND = 'auth.verification.resend';
 export const TOPIC_AUTH_DETAILS = 'auth.details';
 export const TOPIC_AUTH_LOGIN = 'auth.login';
+export const TOPIC_AUTH_REGISTER_BY_CODE = 'auth.registerByCode';

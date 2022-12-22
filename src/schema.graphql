@@ -6,6 +6,9 @@ type Company {
   """Example field (employees count)"""
   amountOfEmployees: Int!
 
+  """Code company for connect"""
+  code: String!
+
   """Example field (Date)"""
   createdAt: DateTime!
 
@@ -74,6 +77,7 @@ type Mutation {
   details(detailsInput: DetailsInput!): User!
   login(loginUserInput: LoginUserInput!): ResponseAuth!
   refresh: ResponseAuth!
+  registerByCodeCompany(code: String!): String!
   registerUser(registerUserInput: RegisterUserInput!): ResponseAuth!
   removeUser(id: String!): String!
   resendVerificationCode: User!
