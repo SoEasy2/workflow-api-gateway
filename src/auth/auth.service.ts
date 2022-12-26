@@ -113,12 +113,16 @@ export class AuthService implements OnModuleInit {
     });
   }
 
-  detailsByCodeCompany(detailsByCodeCompanyInput: DetailsByCodeCompanyInput): Promise<ResponseAuth> {
+  detailsByCodeCompany(
+    detailsByCodeCompanyInput: DetailsByCodeCompanyInput,
+  ): Promise<ResponseAuth> {
     return new Promise<ResponseAuth>((resolve, reject) => {
-      this.clientAuth.send(TOPIC_AUTH_DETAILS_BY_CODE_COMPANY, detailsByCodeCompanyInput).subscribe({
-        next: (response) => resolve(response),
-        error: (error) => reject(error),
-      });
+      this.clientAuth
+        .send(TOPIC_AUTH_DETAILS_BY_CODE_COMPANY, detailsByCodeCompanyInput)
+        .subscribe({
+          next: (response) => resolve(response),
+          error: (error) => reject(error),
+        });
     });
   }
 }

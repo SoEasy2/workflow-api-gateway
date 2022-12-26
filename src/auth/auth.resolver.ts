@@ -121,12 +121,14 @@ export class AuthResolver {
 
   @Mutation(() => ResponseAuth)
   async detailsByCodeCompany(
-      @Args('detailsByCodeCompanyInput')
-          detailsByCodeCompanyInput: DetailsByCodeCompanyInput
+    @Args('detailsByCodeCompanyInput')
+    detailsByCodeCompanyInput: DetailsByCodeCompanyInput,
   ) {
     try {
       this.appLogger.log('[AuthService] -> [detailsByCodeCompany]');
-      return await this.authService.detailsByCodeCompany(detailsByCodeCompanyInput);
+      return await this.authService.detailsByCodeCompany(
+        detailsByCodeCompanyInput,
+      );
     } catch (err) {
       throw new HttpException(err, HttpStatus.BAD_REQUEST);
     }
@@ -135,16 +137,18 @@ export class AuthResolver {
   @Mutation(() => User)
   @UseGuards(AuthGuard)
   async verificationConnectUser(
-      @Args('emailCode', { type: () => String }) emailCode: string,
-      @CurrentUserDecoratorGraphql() user: Partial<User>,
+    @Args('emailCode', { type: () => String }) emailCode: string,
+    @CurrentUserDecoratorGraphql() user: Partial<User>,
   ): Promise<User> {
     try {
       this.appLogger.log('[AuthService] -> [verificationUser]');
       const { email } = user;
-      return await this.authService.verificationConnectUser({ email, emailCode });
+      return await this.authService.verificationConnectUser({
+        email,
+        emailCode,
+      });
     } catch (err) {
       throw new HttpException(err, HttpStatus.BAD_REQUEST);
     }
   }
-
 }
