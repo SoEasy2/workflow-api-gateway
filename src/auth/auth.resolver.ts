@@ -10,6 +10,7 @@ import { GetRefreshTokenDecoratorGraphql } from '../decorators/get-refresh-token
 import { DetailsInput } from './dto/details.input';
 import { CurrentUserDecoratorGraphql } from '../decorators/current-user.decorator.graphql';
 import { LoginUserInput } from './dto/login-user.input';
+import { DetailsByCodeCompanyInput } from './dto/details-by-code-company.input';
 
 @Resolver('auth')
 export class AuthResolver {
@@ -108,11 +109,8 @@ export class AuthResolver {
       throw new HttpException(err, HttpStatus.BAD_REQUEST);
     }
   }
-
   @Mutation(() => String)
-  async registerByCodeCompany(
-      @Args('code') code: string,
-  ): Promise<string>{
+  async registerByCodeCompany(@Args('code') code: string): Promise<string> {
     try {
       this.appLogger.log('[AuthService] -> [registerByCodeCompany]');
       return await this.authService.registerByCodeCompany(code);
@@ -120,4 +118,33 @@ export class AuthResolver {
       throw new HttpException(err, HttpStatus.BAD_REQUEST);
     }
   }
+
+  @Mutation(() => ResponseAuth)
+  async detailsByCodeCompany(
+      @Args('detailsByCodeCompanyInput')
+          detailsByCodeCompanyInput: DetailsByCodeCompanyInput
+  ) {
+    try {
+      this.appLogger.log('[AuthService] -> [detailsByCodeCompany]');
+      return await this.authService.detailsByCodeCompany(detailsByCodeCompanyInput);
+    } catch (err) {
+      throw new HttpException(err, HttpStatus.BAD_REQUEST);
+    }
+  }
+
+  @Mutation(() => User)
+  @UseGuards(AuthGuard)
+  async verificationConnectUser(
+      @Args('emailCode', { type: () => String }) emailCode: string,
+      @CurrentUserDecoratorGraphql() user: Partial<User>,
+  ): Promise<User> {
+    try {
+      this.appLogger.log('[AuthService] -> [verificationUser]');
+      const { email } = user;
+      return await this.authService.verificationConnectUser({ email, emailCode });
+    } catch (err) {
+      throw new HttpException(err, HttpStatus.BAD_REQUEST);
+    }
+  }
+
 }

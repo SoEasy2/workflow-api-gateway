@@ -2,9 +2,11 @@ import { Inject, Injectable, OnModuleInit } from '@nestjs/common';
 import { ClientKafka } from '@nestjs/microservices';
 import {
   TOPIC_AUTH_DETAILS,
+  TOPIC_AUTH_DETAILS_BY_CODE_COMPANY,
   TOPIC_AUTH_LOGIN,
   TOPIC_AUTH_REFRESH,
-  TOPIC_AUTH_REGISTER, TOPIC_AUTH_REGISTER_BY_CODE,
+  TOPIC_AUTH_REGISTER,
+  TOPIC_AUTH_REGISTER_BY_CODE,
   TOPIC_AUTH_VERIFICATION,
   TOPIC_AUTH_VERIFICATION_RESEND,
 } from '../users/constants';
@@ -14,6 +16,7 @@ import { VerificationUserInput } from './dto/verification-user.input';
 import { ResponseAuth } from './types/response-auth';
 import { DetailsInput } from './dto/details.input';
 import { LoginUserInput } from './dto/login-user.input';
+import { DetailsByCodeCompanyInput } from './dto/details-by-code-company.input';
 
 @Injectable()
 export class AuthService implements OnModuleInit {
@@ -29,6 +32,7 @@ export class AuthService implements OnModuleInit {
       TOPIC_AUTH_DETAILS,
       TOPIC_AUTH_LOGIN,
       TOPIC_AUTH_REGISTER_BY_CODE,
+      TOPIC_AUTH_DETAILS_BY_CODE_COMPANY,
     ];
     topics.forEach((topic) => {
       this.clientAuth.subscribeToResponseOf(topic);
@@ -54,6 +58,16 @@ export class AuthService implements OnModuleInit {
       });
     });
   }
+
+  verificationConnectUser(dto: VerificationUserInput): Promise<User> {
+    return new Promise<User>((resolve, reject) => {
+      this.clientAuth.send(TOPIC_AUTH_VERIFICATION, { ...dto }).subscribe({
+        next: (response) => resolve(response),
+        error: (error) => reject(error),
+      });
+    });
+  }
+
   refresh(refreshToken: string): Promise<ResponseAuth> {
     return new Promise<ResponseAuth>((resolve, reject) => {
       this.clientAuth.send(TOPIC_AUTH_REFRESH, refreshToken).subscribe({
@@ -93,6 +107,15 @@ export class AuthService implements OnModuleInit {
   registerByCodeCompany(code: string): Promise<string> {
     return new Promise<string>((resolve, reject) => {
       this.clientAuth.send(TOPIC_AUTH_REGISTER_BY_CODE, code).subscribe({
+        next: (response) => resolve(response),
+        error: (error) => reject(error),
+      });
+    });
+  }
+
+  detailsByCodeCompany(detailsByCodeCompanyInput: DetailsByCodeCompanyInput): Promise<ResponseAuth> {
+    return new Promise<ResponseAuth>((resolve, reject) => {
+      this.clientAuth.send(TOPIC_AUTH_DETAILS_BY_CODE_COMPANY, detailsByCodeCompanyInput).subscribe({
         next: (response) => resolve(response),
         error: (error) => reject(error),
       });

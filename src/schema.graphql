@@ -44,6 +44,23 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 """
 scalar DateTime
 
+input DetailsByCodeCompanyInput {
+  """current company"""
+  currentCompany: String!
+
+  """email"""
+  email: String!
+
+  """password"""
+  password: String!
+
+  """phone"""
+  phone: String!
+
+  """username"""
+  username: String!
+}
+
 input DetailsCompany {
   amountOfEmployees: String!
   name: String!
@@ -75,6 +92,7 @@ input LoginUserInput {
 type Mutation {
   createUser(createUserInput: CreateUserInput!): User!
   details(detailsInput: DetailsInput!): User!
+  detailsByCodeCompany(detailsByCodeCompanyInput: DetailsByCodeCompanyInput!): ResponseAuth!
   login(loginUserInput: LoginUserInput!): ResponseAuth!
   refresh: ResponseAuth!
   registerByCodeCompany(code: String!): String!
@@ -158,6 +176,9 @@ type User {
 
   """Example field (current step)"""
   stepRegistration: String!
+
+  """type registration"""
+  typeRegistration: String!
 
   """ISO date"""
   updatedAt: String

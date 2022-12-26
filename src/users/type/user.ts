@@ -1,6 +1,8 @@
 import { Field, ObjectType } from '@nestjs/graphql';
 import { StepRegistration } from '../constants/stepRegistration';
 import { Company } from '../../company/type/company';
+import { TypeRegistration } from '../constants/typeRegistration';
+import { StepConnect } from '../constants/stepConnect';
 
 @ObjectType()
 export class User {
@@ -20,7 +22,7 @@ export class User {
   sendCodeDate: Date;
 
   @Field(() => String, { description: 'Example field (current step)' })
-  stepRegistration: StepRegistration;
+  stepRegistration: StepRegistration | StepConnect;
 
   @Field(() => Company, { nullable: true })
   currentCompany?: Company | string;
@@ -42,6 +44,9 @@ export class User {
 
   @Field(() => String, { description: 'username', nullable: true })
   username?: string;
+
+  @Field(() => String, { description: 'type registration', nullable: false })
+  typeRegistration?: TypeRegistration;
 
   @Field(() => String, {
     description: 'ISO date',
