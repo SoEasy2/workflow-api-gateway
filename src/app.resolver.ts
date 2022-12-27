@@ -1,5 +1,4 @@
-import { Query, Resolver, Subscription } from '@nestjs/graphql';
-import { Inject } from '@nestjs/common';
+import { Query, Resolver } from '@nestjs/graphql';
 
 @Resolver()
 export class AppResolver {

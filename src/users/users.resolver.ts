@@ -6,7 +6,7 @@ import { HttpException, HttpStatus } from '@nestjs/common';
 import { AppLogger } from '../shared/logger/logger.service';
 import { UpdateUserInput } from './dto/update-user.input';
 
-@Resolver('users')
+@Resolver('user')
 export class UsersResolver {
   constructor(
     private readonly usersService: UsersService,

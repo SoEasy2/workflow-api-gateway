@@ -5,7 +5,7 @@ import {
   Injectable,
   OnModuleInit,
 } from '@nestjs/common';
-import { ClientKafka, RpcException } from '@nestjs/microservices';
+import { ClientKafka } from '@nestjs/microservices';
 import {
   TOPIC_USER_CREATE,
   TOPIC_USER_REMOVE,
@@ -39,18 +39,12 @@ export class UsersService implements OnModuleInit {
         this.clientUser
           .send(TOPIC_USER_CREATE, { ...createUserInput })
           .subscribe({
-            next: (response) => {
-              console.log('RESPONSE', response);
-              resolve(response);
-            },
-            error: (error) => {
-              console.log('ERORR');
-              reject(error);
-            },
+            next: (response) => resolve(response),
+            error: (error) => reject(error),
           });
       });
     } catch (e) {
-      throw new RpcException(e);
+      throw new HttpException(e, HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
 
