@@ -100,6 +100,7 @@ type Mutation {
   removeUser(id: String!): String!
   resendVerificationCode: User!
   updateUser(updateUserInput: UpdateUserInput!): User!
+  verificationConnectUser(emailCode: String!): User!
   verificationUser(emailCode: String!): User!
 }
 

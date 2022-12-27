@@ -7,7 +7,7 @@ import {
   TOPIC_AUTH_REFRESH,
   TOPIC_AUTH_REGISTER,
   TOPIC_AUTH_REGISTER_BY_CODE,
-  TOPIC_AUTH_VERIFICATION,
+  TOPIC_AUTH_VERIFICATION, TOPIC_AUTH_VERIFICATION_CONNECT,
   TOPIC_AUTH_VERIFICATION_RESEND,
 } from '../users/constants';
 import { RegisterUserInput } from './dto/register-user.input';
@@ -33,6 +33,7 @@ export class AuthService implements OnModuleInit {
       TOPIC_AUTH_LOGIN,
       TOPIC_AUTH_REGISTER_BY_CODE,
       TOPIC_AUTH_DETAILS_BY_CODE_COMPANY,
+      TOPIC_AUTH_VERIFICATION_CONNECT,
     ];
     topics.forEach((topic) => {
       this.clientAuth.subscribeToResponseOf(topic);
@@ -61,7 +62,7 @@ export class AuthService implements OnModuleInit {
 
   verificationConnectUser(dto: VerificationUserInput): Promise<User> {
     return new Promise<User>((resolve, reject) => {
-      this.clientAuth.send(TOPIC_AUTH_VERIFICATION, { ...dto }).subscribe({
+      this.clientAuth.send(TOPIC_AUTH_VERIFICATION_CONNECT, { ...dto }).subscribe({
         next: (response) => resolve(response),
         error: (error) => reject(error),
       });
