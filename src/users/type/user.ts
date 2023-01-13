@@ -3,6 +3,7 @@ import { StepRegistration } from '../constants/stepRegistration';
 import { Company } from '../../company/type/company';
 import { TypeRegistration } from '../constants/typeRegistration';
 import { StepConnect } from '../constants/stepConnect';
+import { Languages } from '../constants/languages';
 
 @ObjectType()
 export class User {
@@ -33,6 +34,9 @@ export class User {
   })
   password?: string;
 
+  @Field(() => String, { nullable: true, description: 'language' })
+  language: Languages;
+
   @Field(() => String, { description: 'Example field (salt)' })
   salt?: string;
 
@@ -53,4 +57,17 @@ export class User {
     nullable: true,
   })
   updatedAt: Date;
+  @Field(() => String, {
+    description: 'ISO date',
+    nullable: true,
+  })
+  birthday?: Date;
+  @Field(() => String, { description: 'address', nullable: true })
+  address?: string;
+  @Field(() => String, { description: 'description', nullable: true })
+  description?: string;
+  @Field(() => String, { description: 'Manager', nullable: true })
+  manager?: string | null;
+  @Field(() => String, { description: 'Department', nullable: true })
+  department?: string | null;
 }

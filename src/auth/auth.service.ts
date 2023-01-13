@@ -1,6 +1,7 @@
 import { Inject, Injectable, OnModuleInit } from '@nestjs/common';
 import { ClientKafka } from '@nestjs/microservices';
 import {
+  TOPIC_AUTH_CHANGE_PASSWORD,
   TOPIC_AUTH_DETAILS,
   TOPIC_AUTH_DETAILS_BY_CODE_COMPANY,
   TOPIC_AUTH_LOGIN,
@@ -18,6 +19,7 @@ import { ResponseAuth } from './types/response-auth';
 import { DetailsInput } from './dto/details.input';
 import { LoginUserInput } from './dto/login-user.input';
 import { DetailsByCodeCompanyInput } from './dto/details-by-code-company.input';
+import { ChangePasswordInput } from './dto/change-password.input';
 
 @Injectable()
 export class AuthService implements OnModuleInit {
@@ -35,6 +37,7 @@ export class AuthService implements OnModuleInit {
       TOPIC_AUTH_REGISTER_BY_CODE,
       TOPIC_AUTH_DETAILS_BY_CODE_COMPANY,
       TOPIC_AUTH_VERIFICATION_CONNECT,
+      TOPIC_AUTH_CHANGE_PASSWORD,
     ];
     topics.forEach((topic) => {
       this.clientAuth.subscribeToResponseOf(topic);
@@ -123,6 +126,25 @@ export class AuthService implements OnModuleInit {
     return new Promise<ResponseAuth>((resolve, reject) => {
       this.clientAuth
         .send(TOPIC_AUTH_DETAILS_BY_CODE_COMPANY, detailsByCodeCompanyInput)
+        .subscribe({
+          next: (response) => resolve(response),
+          error: (error) => reject(error),
+        });
+    });
+  }
+
+  changePasswordUser(
+    changePasswordInput: ChangePasswordInput,
+    email: string,
+    id: string,
+  ): Promise<boolean> {
+    return new Promise<boolean>((resolve, reject) => {
+      this.clientAuth
+        .send(TOPIC_AUTH_CHANGE_PASSWORD, {
+          ...changePasswordInput,
+          email,
+          id,
+        })
         .subscribe({
           next: (response) => resolve(response),
           error: (error) => reject(error),

@@ -11,6 +11,7 @@ import { DetailsInput } from './dto/details.input';
 import { CurrentUserDecoratorGraphql } from '../decorators/current-user.decorator.graphql';
 import { LoginUserInput } from './dto/login-user.input';
 import { DetailsByCodeCompanyInput } from './dto/details-by-code-company.input';
+import { ChangePasswordInput } from './dto/change-password.input';
 
 @Resolver('auth')
 export class AuthResolver {
@@ -109,6 +110,7 @@ export class AuthResolver {
       throw new HttpException(err, HttpStatus.BAD_REQUEST);
     }
   }
+
   @Mutation(() => String)
   async registerByCodeCompany(@Args('code') code: string): Promise<string> {
     try {
@@ -147,6 +149,23 @@ export class AuthResolver {
         email,
         emailCode,
       });
+    } catch (err) {
+      throw new HttpException(err, HttpStatus.BAD_REQUEST);
+    }
+  }
+
+  @Mutation(() => Boolean)
+  @UseGuards(AuthGuard)
+  async changePasswordUser(
+    @Args('changePasswordInput')
+    changePasswordInput: ChangePasswordInput,
+    @CurrentUserDecoratorGraphql() user: Partial<User>,
+  ): Promise<boolean> {
+    try {
+      this.appLogger.log('[AuthService] -> [changePasswordUser]');
+      const { email, id } = user;
+      await this.authService.changePasswordUser(changePasswordInput, email, id);
+      return true;
     } catch (err) {
       throw new HttpException(err, HttpStatus.BAD_REQUEST);
     }
