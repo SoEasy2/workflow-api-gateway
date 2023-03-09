@@ -2,6 +2,14 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+input ChangePasswordInput {
+  """newPassword"""
+  newPassword: String!
+
+  """password"""
+  password: String!
+}
+
 type Company {
   """Example field (employees count)"""
   amountOfEmployees: Int!
@@ -90,6 +98,7 @@ input LoginUserInput {
 }
 
 type Mutation {
+  changePasswordUser(changePasswordInput: ChangePasswordInput!): Boolean!
   createUser(createUserInput: CreateUserInput!): User!
   details(detailsInput: DetailsInput!): User!
   detailsByCodeCompany(detailsByCodeCompanyInput: DetailsByCodeCompanyInput!): ResponseAuth!
@@ -136,20 +145,38 @@ type Token {
 }
 
 input UpdateUserInput {
-  """Example field (test@gmail.com)"""
-  email: String!
+  """Address"""
+  address: String
+
+  """Date birthday"""
+  birthday: DateTime
+
+  """Department"""
+  department: String
+
+  """Description"""
+  description: String
 
   """Example field (test@gmail.com)"""
-  id: String!
+  email: String
 
-  """Example field (test)"""
-  password: String
+  """Example field (test@gmail.com)"""
+  id: String
+
+  """Manager id"""
+  manager: String
 
   """Example field (+33333333)"""
-  phone: String!
+  phone: String
 }
 
 type User {
+  """address"""
+  address: String
+
+  """ISO date"""
+  birthday: String
+
   """Example field (code email)"""
   codeEmail: String!
 
@@ -157,11 +184,23 @@ type User {
   createdAt: String
   currentCompany: Company
 
+  """Department"""
+  department: String
+
+  """description"""
+  description: String
+
   """Example field (email)"""
   email: String!
 
   """Example field (uuid)"""
   id: String!
+
+  """language"""
+  language: String
+
+  """Manager"""
+  manager: String
 
   """Example field (password)"""
   password: String

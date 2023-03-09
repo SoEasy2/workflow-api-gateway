@@ -2,9 +2,11 @@ import { Args, Mutation, Resolver } from '@nestjs/graphql';
 import { User } from './type/user';
 import { CreateUserInput } from './dto/create-user.input';
 import { UsersService } from './users.service';
-import { HttpException, HttpStatus } from '@nestjs/common';
+import { HttpException, HttpStatus, UseGuards } from '@nestjs/common';
 import { AppLogger } from '../shared/logger/logger.service';
 import { UpdateUserInput } from './dto/update-user.input';
+import { AuthGuard } from '../guards/auth.guard';
+import { CurrentUserDecoratorGraphql } from '../decorators/current-user.decorator.graphql';
 
 @Resolver('user')
 export class UsersResolver {
@@ -26,10 +28,20 @@ export class UsersResolver {
   }
 
   @Mutation(() => User)
-  async updateUser(@Args('updateUserInput') updateUserInput: UpdateUserInput) {
+  @UseGuards(AuthGuard)
+  async updateUser(
+    @Args('updateUserInput') updateUserInput: UpdateUserInput,
+    @CurrentUserDecoratorGraphql() user: Partial<User>,
+  ): Promise<User> {
     try {
       this.appLogger.log('[UsersResolver] -> [updateUser]');
-      return await this.usersService.updateUser(updateUserInput);
+      const { id, email } = user;
+      const dto = {
+        ...updateUserInput,
+        id,
+        email,
+      };
+      return await this.usersService.updateUser(dto);
     } catch (err) {
       throw new HttpException(err, HttpStatus.BAD_REQUEST);
     }
